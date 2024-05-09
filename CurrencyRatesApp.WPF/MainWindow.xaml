@@ -1,0 +1,84 @@
+﻿<Window x:Class="CurrencyRatesApp.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:local="clr-namespace:CurrencyRatesApp.WPF"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:viewmodel="clr-namespace:CurrencyRatesApp.WPF.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:RatesViewModel}"
+        mc:Ignorable="d"
+            Title="MainWindow" Height="750" Width="1200" WindowStartupLocation="CenterScreen" WindowStyle="None"
+        AllowsTransparency="True" Background="Transparent">
+    <Border Background="#272537"
+         CornerRadius="20">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="CurrencyApp"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Foreground="White"
+                    FontSize="22"
+                    Margin="20, 0, 0, 0"/>
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <TextBox Text="{Binding Description, ValidatesOnDataErrors=True}"  Width="220" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                         Margin="10" FontSize="20"/>
+                <Button Command="{Binding SaveNewCurrFileCommand}" Style="{StaticResource ButtonStyle}" Width="140" Height="30"  Content="Сохранить новый"
+                        HorizontalAlignment="Left" />
+                <Button Command="{Binding SaveCurrentRateCommand}" Style="{StaticResource ButtonStyle}" Width="140" Height="30"  Content="Сохранить текущий"
+                        HorizontalAlignment="Left" Margin="10" />
+            </DockPanel>
+            <StackPanel Grid.Row="1" >
+                <DockPanel>
+                    <Button Command="{Binding GetDailyCurrensyCommand}" Style="{StaticResource ButtonStyle}" Width="100" Height="30" Margin="15,0,0,0" 
+                            Content="Получить данные" FontSize="10"/>
+                    <Button Command="{Binding OpenFileCommand}" Style="{StaticResource ButtonStyle}" Width="100" Height="30"  Content="Открыть"/>
+                </DockPanel>
+                <telerik:RadGridView ItemsSource="{Binding Shorts}" AutoGenerateColumns="False" HorizontalAlignment="Center" 
+                                     ColumnWidth="auto" Height="550" Style="{StaticResource MyDataGridStyle}" Width="250" Margin="0,10,0,10">
+                    <telerik:RadGridView.Columns>
+                        <telerik:GridViewDataColumn DataMemberBinding="{Binding Date}" Header="Date"/>
+                        <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_OfficialRate}" Header="OfficialRate"/>
+                    </telerik:RadGridView.Columns>
+                </telerik:RadGridView>
+                <DockPanel>
+                    <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Style="{StaticResource DatePickerStyle}" VerticalAlignment="Bottom"
+                                HorizontalAlignment="Left" Grid.Column="1" Margin="10"/>
+                    <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Style="{StaticResource DatePickerStyle}" VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Right" Grid.Column="1" Margin="10"/>
+                </DockPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <Button HorizontalAlignment="Right" Height="20" Width="30" Grid.Column="1" VerticalAlignment="Top" Content="X" Command="{Binding CloseWindowCommand}" 
+                        Style="{StaticResource ButtonStyle}" Margin="0,0,10,0" />
+            </StackPanel>
+            <telerik:RadGridView Grid.Row="1" Grid.Column="1" Style="{StaticResource MyDataGridStyle}"  SelectedItem="{Binding SelectedRate}" ItemsSource="{Binding Rates}" 
+                                 AutoGenerateColumns="False" ColumnWidth="Auto" VerticalAlignment="Top" Width="560" HorizontalAlignment="Left" >
+                <telerik:RadGridView.Columns>
+                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Date}" Header="Date"/>
+                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_Abbreviation}" Header="Abbreviation"/>
+                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_Name}" Header="Name"/>
+                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_OfficialRate}" Header="OficialRate"/>
+                </telerik:RadGridView.Columns>
+            </telerik:RadGridView>
+            <telerik:RadCartesianChart Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Width="390" Height="675">
+                <telerik:RadCartesianChart.HorizontalAxis>
+                    <telerik:DateTimeCategoricalAxis LabelRotationAngle="2"/>
+                </telerik:RadCartesianChart.HorizontalAxis>
+                <telerik:RadCartesianChart.VerticalAxis>
+                    <telerik:LinearAxis/>
+                </telerik:RadCartesianChart.VerticalAxis>
+                <telerik:RadCartesianChart.Series>
+                    <telerik:LineSeries ItemsSource="{Binding Shorts}" CategoryBinding="Date" ValueBinding="Cur_OfficialRate"/>
+                </telerik:RadCartesianChart.Series>
+            </telerik:RadCartesianChart>
+        </Grid>
+    </Border>
+</Window>
