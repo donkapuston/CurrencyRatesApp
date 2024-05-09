@@ -67,6 +67,17 @@ namespace CurrencyRatesApp.WPF.ViewModel
             }
         }
 
+        private DateTime? _currDate;
+        public DateTime? CurrencyDate
+        {
+            get { return _currDate; }
+            set
+            {
+                _currDate = value;
+                OnPropertyChanged(nameof(CurrencyDate));
+            }
+        }
+
         private Rate _selectedRate;
         public Rate SelectedRate
         {
@@ -89,6 +100,28 @@ namespace CurrencyRatesApp.WPF.ViewModel
             }
         }
 
+        private bool _useSelectedDate;
+        public bool UseSelectedDate
+        {
+            get { return _useSelectedDate; }
+            set
+            {
+                _useSelectedDate = value;
+                OnPropertyChanged(nameof(UseSelectedDate));
+            }
+        }
+        private bool _useToday;
+        public bool UseToday
+        {
+            get { return !_useSelectedDate; }
+            set
+            {
+                _useSelectedDate = !value;
+                OnPropertyChanged(nameof(UseToday));
+                OnPropertyChanged(nameof(UseSelectedDate));
+            }
+        }
+
         public RatesViewModel(IMessageService messageService, IRatesService ratesService)
         {
             _messageService = messageService;
@@ -108,8 +141,24 @@ namespace CurrencyRatesApp.WPF.ViewModel
             Rates.Clear();
             try
             {
-                var response = await _ratesService.GetDailyCurrency();
-
+                IEnumerable<Rate> response;
+                if (UseSelectedDate)
+                {
+                    if (CurrencyDate.HasValue)
+                    {
+                        response = await _ratesService.GetDailyCurrencyAsync(CurrencyDate);
+                    }
+                    else
+                    {
+                        response = null;
+                        _messageService.ShowMessage("Не выбрана дата");
+                    }                  
+                }
+                else
+                {
+                    response = await _ratesService.GetDailyCurrencyAsync();
+                }
+                
                 foreach (var rate in response)
                 {
                     Rates.Add(rate);
@@ -119,7 +168,7 @@ namespace CurrencyRatesApp.WPF.ViewModel
             }
             catch (Exception ex)
             {              
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageService.ShowMessage($"An error occurred: {ex.Message}");
             }
         }
         public void CloseWindow()
@@ -135,7 +184,7 @@ namespace CurrencyRatesApp.WPF.ViewModel
                 var startDate = StartDate.Value;
                 var endDate = EndDate.Value;
 
-                var result = await _ratesService.GetDynamicCurrency(curId, startDate, endDate);
+                var result = await _ratesService.GetDynamicCurrencyAsync(curId, startDate, endDate);
 
                 foreach (var rate in result)
                 {

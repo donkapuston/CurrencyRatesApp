@@ -9,7 +9,8 @@ namespace CurrencyRatesApp.WPF.Interfaces
 {
     public interface IRatesService
     {
-        Task<Rate[]> GetDailyCurrency();
-        Task<RateShort[]> GetDynamicCurrency(int curId, DateTime startDate, DateTime endDate);
+        Task<Rate[]> GetDailyCurrencyAsync();
+        Task<Rate[]> GetDailyCurrencyAsync(DateTime? startDate);
+        Task<RateShort[]> GetDynamicCurrencyAsync(int curId, DateTime startDate, DateTime endDate);
     }
 }

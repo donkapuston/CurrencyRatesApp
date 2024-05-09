@@ -49,6 +49,7 @@
                     </telerik:RadGridView.Columns>
                 </telerik:RadGridView>
                 <DockPanel>
+                    <TextBlock Text="Динамика валюты" Foreground="White" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5"/>
                     <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Style="{StaticResource DatePickerStyle}" VerticalAlignment="Bottom"
                                 HorizontalAlignment="Left" Grid.Column="1" Margin="10"/>
                     <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Style="{StaticResource DatePickerStyle}" VerticalAlignment="Bottom" 
@@ -60,7 +61,7 @@
                         Style="{StaticResource ButtonStyle}" Margin="0,0,10,0" />
             </StackPanel>
             <telerik:RadGridView Grid.Row="1" Grid.Column="1" Style="{StaticResource MyDataGridStyle}"  SelectedItem="{Binding SelectedRate}" ItemsSource="{Binding Rates}" 
-                                 AutoGenerateColumns="False" ColumnWidth="Auto" VerticalAlignment="Top" Width="560" HorizontalAlignment="Left" >
+                                 AutoGenerateColumns="False" ColumnWidth="Auto" VerticalAlignment="Top" Height="630"  Width="560" HorizontalAlignment="Left" >
                 <telerik:RadGridView.Columns>
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding Date}" Header="Date"/>
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_Abbreviation}" Header="Abbreviation"/>
@@ -68,6 +69,11 @@
                     <telerik:GridViewDataColumn DataMemberBinding="{Binding Cur_OfficialRate}" Header="OficialRate"/>
                 </telerik:RadGridView.Columns>
             </telerik:RadGridView>
+            <DockPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1" Height="45" Width="560">
+                <RadioButton Foreground="White" Content="По дате" IsChecked="{Binding UseSelectedDate, Mode=TwoWay}" VerticalAlignment="Center" Margin="10"/>
+                <RadioButton Foreground="White" Content="На сегодня" IsChecked="{Binding UseToday, Mode=TwoWay}" VerticalAlignment="Center" Margin="10"/>
+                <DatePicker SelectedDate="{Binding CurrencyDate}" Width="180" VerticalAlignment="Center"/>
+            </DockPanel>
             <telerik:RadCartesianChart Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Width="390" Height="675">
                 <telerik:RadCartesianChart.HorizontalAxis>
                     <telerik:DateTimeCategoricalAxis LabelRotationAngle="2"/>
